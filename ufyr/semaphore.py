@@ -58,10 +58,10 @@ class RedisSemaphore():
     
     def __init__(self, name, limit=1, acquire=True, **kwargs):
         
-        #if 'host' not in kwargs:
-        #    kwargs['host'] = DEFAULT_HOST
-        #if 'db' not in kwargs:
-        #    kwargs['db'] = DEFAULT_DB
+        if 'host' not in kwargs:
+            kwargs['host'] = DEFAULT_HOST
+        if 'db' not in kwargs:
+            kwargs['db'] = DEFAULT_DB
             
         self.r = StrictRedis(**kwargs)
         self.limit = limit
