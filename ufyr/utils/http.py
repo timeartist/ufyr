@@ -43,21 +43,6 @@ class Callback(object):
     def execute(self):
         f = getattr(requests, self.method.lower())
         f(self.url, **self.req_kwargs)
-        
-        
-    
-        
-        
-        
-    
 
-
-
-def process_callback(callback_obj):
-    '''
-    Given a string or dict with callback info process that callback.
-    '''
-    data = {'callback':{'method':'POST', 'url':'http://localhost', 'kwargs':{'data':{'id':'foo'}}}}
-    
     
     
