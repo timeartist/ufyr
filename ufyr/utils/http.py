@@ -15,6 +15,13 @@ class Callback(object):
         self.url = url
         self.method = method
         self.req_kwargs = req_kwargs
+        
+    def __eq__(self, other):
+        
+        return all((self.url.lower() == other.url.lower(),
+                    self.method.lower() == other.method.lower(),
+                    self.req_kwargs == other.req_kwargs))
+        
     
     @classmethod
     def from_json(cls, json_string):
@@ -28,7 +35,7 @@ class Callback(object):
         if 'url' not in json_obj:
             raise Exception('"url" not in json')
         
-        return cls.__init__(**json_obj)
+        return Callback(**json_obj)
     
     def to_json(self):
         '''
@@ -41,8 +48,11 @@ class Callback(object):
         return json.dumps(json_obj)
     
     def execute(self):
+        '''
+        Execute the callback call that this object represents.
+        '''
         f = getattr(requests, self.method.lower())
-        f(self.url, **self.req_kwargs)
+        return f(self.url, **self.req_kwargs)
 
     
     
