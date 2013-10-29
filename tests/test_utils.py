@@ -1,8 +1,8 @@
+import unittest
 import json
 from os import environ
 from random import choice
 from subprocess import Popen
-from unittest import TestCase
 from sys import executable
 from time import sleep
 
@@ -10,7 +10,7 @@ import requests
 
 from ufyr.utils.http import Callback
 
-class TestHTTPCallback(TestCase):
+class TestHTTPCallback(unittest.TestCase):
     def setUp(self):
         self.app = Popen([executable, 'tests/echo_server.py'], env=environ.copy())
         self.url = 'http://localhost:5000'
