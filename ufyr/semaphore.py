@@ -5,8 +5,8 @@ from uuid import uuid4 as UUID
 from atexit import register
 
 
-DEFAULT_HOST = os.environ.get('REDIS_HOST', 'localhost')
-DEFAULT_DB = os.environ.get('REDIS_DB', 0)
+DEFAULT_HOST = os.environ.get('REDIS_HOST', 'redis-db0')
+DEFAULT_DB = os.environ.get('REDIS_DB', 1)
 
 
 class RedisSemaphore():
