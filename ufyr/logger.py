@@ -59,7 +59,5 @@ class Logger():
         formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(name)s - %(message)s')
         file_handler.setFormatter(formatter)    
         Logger._logger.addHandler(file_handler)
-        import pdb
         
-        pdb.set_trace()
         return Logger._logger
