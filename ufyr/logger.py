@@ -23,6 +23,31 @@ class Logger():
          process IDs.  For now we will simply return the Python Logger.
         """
         Logger._logger = logging.getLogger(self.name)
+
+        if (len(Logger._logger.handlers) > 0
+            and os.path.isfile(self.file_path)
+            and os.path.isfile(Logger._logger.handlers[0].baseFilename)
+            and os.path.samefile(Logger._logger.handlers[0].baseFilename, self.file_path)):
+            #for handler in Logger._logger.handlers:
+            #    if all((handler.get_name() == self.name,
+            #            os.path.samefile(handler.baseFilename, self.file_path))):
+            print 'skipping addHandler'
+            return Logger._logger
+        
+        elif len(Logger._logger.handlers) > 0:
+            Logger._logger.setLevel(self.log_level)
+            file_handler = logging.handlers.RotatingFileHandler(self.file_path,
+                                                                maxBytes=1000000,
+                                                                backupCount=5,
+                                                                delay=True)
+            
+            formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(name)s - %(message)s')
+            file_handler.setFormatter(formatter)    
+            
+            Logger._logger.handlers[0] = file_handler
+            return Logger._logger
+        
+
         Logger._logger.setLevel(self.log_level)
 
         file_handler = logging.handlers.RotatingFileHandler(
@@ -32,8 +57,9 @@ class Logger():
             delay=True)
 
         formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(name)s - %(message)s')
-        file_handler.setFormatter(formatter)
-
+        file_handler.setFormatter(formatter)    
         Logger._logger.addHandler(file_handler)
-
+        import pdb
+        
+        pdb.set_trace()
         return Logger._logger
