@@ -4,6 +4,8 @@ import json
 
 import requests
 
+from ufyr.decorators import retry
+
 class Callback(object):
     def __init__(self, url, method='GET', req_kwargs={}, **kwargs):
         
@@ -47,12 +49,13 @@ class Callback(object):
         
         return json.dumps(json_obj)
     
+    @retry
     def execute(self):
         '''
         Execute the callback call that this object represents.
         '''
         f = getattr(requests, self.method.lower())
-        return f(self.url, **self.req_kwargs)
+        return f(self.url, **self.req_kwargs).status_code < 400
 
     
     
