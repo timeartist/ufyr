@@ -74,7 +74,7 @@ def retry(*args, **kwargs):
                 sleep(i*triangular(*interval))
                 
                 if i > limit:
-                    raise Exception('Retry Limit Exceeded: %s.%s - %s %s'%(f.__module__, f.__Name__,
+                    raise Exception('Retry Limit Exceeded: %s.%s - %s %s'%(f.__module__, f.__name__,
                                                                            args, fkwargs))
                 try:
                     success = f(*args, **fkwargs)
