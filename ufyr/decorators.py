@@ -87,11 +87,14 @@ def retry(*args, **kwargs):
                     
         return _fx
 
-    
+        
     limit = kwargs.get('limit', 15)
     interval = kwargs.get('interval', (3, 5))
     
-    return _retry
+    if args and callable(args[0]):
+        return _retry(args[0])
+    else:
+        return _retry
                     
                 
         
