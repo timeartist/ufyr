@@ -1,9 +1,14 @@
 #stdlib
 import os
 from atexit import register
+from random import triangular
+
+#3rd party
+from gevent import sleep 
 
 #local
 from semaphore import RedisSemaphore
+from logger import Logger
 
 def rate_limited(*args, **kwargs):
     '''
@@ -58,3 +63,36 @@ def rate_limited(*args, **kwargs):
         limit = args[0]
         return _rate_limited
    
+   
+def retry(*args, **kwargs):
+    def _retry(f):
+        def _fx(*args, **fkwargs):
+            success = False
+            i = 0
+            while not success:
+                
+                sleep(i*triangular(*interval))
+                
+                if i > limit:
+                    raise Exception('Retry Limit Exceeded: %s.%s - %s %s'%(f.__module__, f.__Name__,
+                                                                           args, fkwargs))
+                try:
+                    success = f(*args, **fkwargs)
+                except:
+                    import traceback
+                    traceback.print_exc()
+                finally:
+                    i += 1
+                    
+                    
+        return _fx
+
+    
+    limit = kwargs.get('limit', 15)
+    interval = kwargs.get('interval', (3, 5))
+    
+    return _retry
+                    
+                
+        
+    
