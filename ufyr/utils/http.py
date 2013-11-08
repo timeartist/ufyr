@@ -55,7 +55,7 @@ class Callback(object):
         Execute the callback call that this object represents.
         '''
         f = getattr(requests, self.method.lower())
-        return f(self.url, **self.req_kwargs).status_code < 400
+        return f(self.url, **self.req_kwargs).status_code <= 400
 
     
     
