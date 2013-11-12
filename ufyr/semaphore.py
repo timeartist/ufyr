@@ -1,6 +1,6 @@
 import os
 from time import sleep
-from redis import StrictRedis
+from redis import StrictRedis, WatchError
 from uuid import uuid4 as UUID
 from atexit import register
 
@@ -70,10 +70,7 @@ class RedisSemaphore():
 
         self.key = 'semaphore.%s'%str(name)
         self.queue = 'semaphore.%s.queue'%str(name)
-            
-        if self.r.get(self.key) is None:
-            self.r.set(self.key, 0)
-            
+                        
         if acquire:
             self.acquire()
             
@@ -110,34 +107,47 @@ class RedisSemaphore():
         otherwise return False
         '''
         try:
-            val = int(self.r.get(self.key) or 0)
-            if val < self.limit:
-                self.r.incr(self.key)
-                self.counter += 1
-                return True
-            
-            elif blocking:
-                ##Wait in line until it's our turn - checking to see if it is every 1/5 of a second
-                queue_member = str(UUID())
-                self.r.rpush(self.queue, queue_member)
-                self.queue_members.append(queue_member)
+            with self.r.pipeline() as pipe:
                 
-                while True:
-                    val = int(self.r.get(self.key) or 0)
-                    if val < self.limit and self.r.lindex(self.queue, 0) == queue_member:
-                        break
-                    else:
-                        sleep(.2)
-    
-                self.r.incr(self.key)
-                self.counter += 1
-                self.r.lpop(self.queue)
-                self.queue_members.remove(queue_member)
-                
-                return True
+                pipe.watch(self.key)
+                val = int(pipe.get(self.key) or 0)
+                if val < self.limit:
+                    pipe.multi()
+                    pipe.incr(self.key)
+                    pipe.execute()
+                    self.counter += 1
+                    return True
             
-            else:
-                return False
+                elif blocking:
+                    ##Wait in line until it's our turn - checking to see if it is every 1/5 of a second
+                    queue_member = str(UUID())
+                    self.r.rpush(self.queue, queue_member)
+                    self.queue_members.append(queue_member)
+                    
+                    while True:
+                        pipe.watch(self.key)
+                        val = int(pipe.get(self.key) or 0)
+                        if val < self.limit and pipe.lindex(self.queue, 0) == queue_member:
+                            break
+                        else:
+                            pipe.unwatch()
+                            sleep(.2)
+                    
+                    pipe.multi()
+                    pipe.incr(self.key)
+                    pipe.lpop(self.queue)
+                    pipe.execute()
+                    self.counter += 1
+                    
+                    self.queue_members.remove(queue_member)
+                    
+                    return True
+            
+                else:
+                    return False
+        except WatchError:
+            self.acquire(blocking)
+                
         finally:
             self.r.expire(self.key, 60*60*24)
         
