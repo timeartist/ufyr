@@ -146,7 +146,7 @@ class RedisSemaphore():
                 else:
                     return False
         except WatchError:
-            self.acquire(blocking)
+            return self.acquire(blocking)
                 
         finally:
             self.r.expire(self.key, 60*60*24)
