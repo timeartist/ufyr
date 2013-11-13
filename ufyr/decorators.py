@@ -2,9 +2,7 @@
 import os
 from atexit import register
 from random import triangular
-
-#3rd party
-from gevent import sleep 
+from time import sleep
 
 #local
 from semaphore import RedisSemaphore
