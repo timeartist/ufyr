@@ -63,7 +63,7 @@ class RedisSemaphore():
         else:
             if 'host' not in kwargs:
                 kwargs['host'] = DEFAULT_HOST
-            else 'db' not in kwargs:
+            if 'db' not in kwargs:
                 kwargs['db'] = DEFAULT_DB
             
         self.r = StrictRedis(**kwargs)
