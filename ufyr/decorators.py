@@ -30,10 +30,11 @@ def rate_limited(*args, **kwargs):
     
     if 'connection_pool' in kwargs:
         pass
-    elif 'host' not in kwargs:
-        kwargs['host'] = os.environ.get('REDIS_HOST', 'localhost')
-    elif 'db' not in kwargs:
-        kwargs['db'] = os.environ.get('REDIS_DB', 0)
+    else:
+        if 'host' not in kwargs:
+            kwargs['host'] = os.environ.get('REDIS_HOST', 'localhost')
+        if 'db' not in kwargs:
+            kwargs['db'] = os.environ.get('REDIS_DB', 0)
 
     def _rate_limited(f):
         name = '.'.join((f.__module__, f.__name__))
