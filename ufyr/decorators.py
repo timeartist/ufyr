@@ -28,9 +28,11 @@ def rate_limited(*args, **kwargs):
     Maintains locks on redis-db0/1 unless host/db are overwritten in kwargs
     '''
     
-    if 'host' not in kwargs:
+    if 'connection_pool' in kwargs:
+        pass
+    elif 'host' not in kwargs:
         kwargs['host'] = os.environ.get('REDIS_HOST', 'localhost')
-    if 'db' not in kwargs:
+    elif 'db' not in kwargs:
         kwargs['db'] = os.environ.get('REDIS_DB', 0)
 
     def _rate_limited(f):
