@@ -56,12 +56,15 @@ def rate_limited(*args, **kwargs):
     
         return fx
         
-    if callable(args[0]):
+    if args and callable(args[0]):
         f = args[0]
         limit = 1
         return _rate_limited(f)
     else:
-        limit = args[0]
+        if args:
+            limit = args[0]
+        else:
+            limit = 1
         return _rate_limited
    
    
