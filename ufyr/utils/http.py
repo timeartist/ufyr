@@ -49,6 +49,12 @@ class Callback(object):
         
         return json.dumps(json_obj)
     
+    def execute_async(self, queue):
+        f = getattr(requests, self.method.lower())
+        f = retry(f) ##decorate and then enqueue the decorated function
+        f.enqueue_call(func=f,
+                       kwargs = self.req_kwargs)
+    
     @retry
     def execute(self):
         '''
