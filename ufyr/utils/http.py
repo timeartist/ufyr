@@ -52,7 +52,7 @@ class Callback(object):
     def execute_async(self, queue):
         f = getattr(requests, self.method.lower())
         f = retry(f) ##decorate and then enqueue the decorated function
-        f.enqueue_call(func=f,
+        queue.enqueue_call(func=f,
                        kwargs = self.req_kwargs)
     
     @retry
