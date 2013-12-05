@@ -50,6 +50,7 @@ class Callback(object):
         return json.dumps(json_obj)
     
     def execute_async(self, queue):
+        print 'UFYR ASYNC EXECUTE'
         f = getattr(requests, self.method.lower())
         f = retry(f) ##decorate and then enqueue the decorated function
         queue.enqueue_call(func=f,
