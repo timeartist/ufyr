@@ -82,14 +82,20 @@ def retry(*args, **kwargs):
                 sleep(i*triangular(*interval))
                 
                 try:
-                    success = f(*args, **fkwargs)
+                    result = f(*args, **fkwargs)
+                    
+                    if exc_only:
+                        success = True
+                    else:
+                        success = result
+                        
                 except:
                     import traceback
                     traceback.print_exc()
                 finally:
                     i += 1
                     
-            return success
+            return result
                     
                     
         return _fx
@@ -97,6 +103,7 @@ def retry(*args, **kwargs):
         
     limit = kwargs.get('limit', 15)
     interval = kwargs.get('interval', (3, 5))
+    exc_only = kwargs.get('exc_only', False)
     
     if args and callable(args[0]):
         return _retry(args[0])
