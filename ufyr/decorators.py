@@ -69,6 +69,29 @@ def rate_limited(*args, **kwargs):
    
    
 def retry(*args, **kwargs):
+    '''
+    Simple exception try/catch surpress until a threshold is reached. 
+    
+    Each retry increases the delay of the next attempt, simply try_count * interval.
+    
+    Default behavior: Function must return something that resolves to bool(result) == True unless
+    exc_only is defined.
+    
+    Options:
+        limit - int - number of times to retry (default: 15)
+        interval - tuple of ints - interval range to retry in (default: 3-5s)
+        exc_only - bool - Only retry if the function raises an exception (Default: False)
+        
+    Examples:
+        @retry
+        def erratically_failing_function():
+            return True or False
+            
+        @retry(exc_only=True):
+        def erratically_failing_function():
+            raise Exception("I don't always fail, but when I do, I do so exceptionally")
+            return None
+    '''
     def _retry(f):
         def _fx(*args, **fkwargs):
             success = False
