@@ -150,7 +150,7 @@ source_data = [(514890, 17106),
 if __name__ == '__main__':
     size = 0
     for movie_id, media_id in source_data:
-        fp = path.join('/mnt/gpfs/media/source', movie_id, '%d.mp4'%media_id)
+        fp = path.join('/mnt/gpfs/media/source', str(movie_id), '%d.mp4'%media_id)
         filesize = stat(fp).st_size
         print fp, filesize
         size += filesize
