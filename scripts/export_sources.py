@@ -155,8 +155,8 @@ if __name__ == '__main__':
         if not path.isfile(fp):
             broken_files.append(fp)
         filesize = stat(fp).st_size
-        print fp, filesize
+        print fp, filesize * 9.31323e-10, 'GB'
         size += filesize
         
-    print 'Final Size ->', size / 9.09495e-13, 'TB'
+    print 'Final Size ->', size * 9.09495e-13, 'TB'
     print 'Broken Files ->', broken_files
