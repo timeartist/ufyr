@@ -154,6 +154,7 @@ if __name__ == '__main__':
         fp = path.join('/mnt/gpfs/media/source', str(movie_id), '%d.mp4'%media_id)
         if not path.isfile(fp):
             broken_files.append(fp)
+            continue
         filesize = stat(fp).st_size
         print fp, filesize * 9.31323e-10, 'GB'
         size += filesize
