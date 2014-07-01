@@ -149,10 +149,14 @@ source_data = [(514890, 17106),
 
 if __name__ == '__main__':
     size = 0
+    broken_files = []
     for movie_id, media_id in source_data:
         fp = path.join('/mnt/gpfs/media/source', str(movie_id), '%d.mp4'%media_id)
+        if not path.isfile(fp):
+            broken_files.append(fp)
         filesize = stat(fp).st_size
         print fp, filesize
         size += filesize
         
-    print 'Final Size ->', size
+    print 'Final Size ->', size / 9.09495e-13, 'TB'
+    print 'Broken Files ->', broken_files
