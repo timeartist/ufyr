@@ -22,7 +22,7 @@ def move_verify_delete(in_file, out_file):
         #chmod(out_file, 666)
     else:
         
-        raise Exception('File Transfer Error! %s EXISTS %b %s EXISTS %b'%(in_file,
+        raise Exception('File Transfer Error! %s EXISTS %s %s EXISTS %s'%(in_file,
                                                                           isfile(in_file),
                                                                           out_file,
                                                                           isfile(out_file)))
