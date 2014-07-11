@@ -1,12 +1,13 @@
 #stdlib
 import os
+import logging
 from atexit import register
 from random import triangular
 from time import sleep
 
+
 #local
 from semaphore import RedisSemaphore
-from logger import Logger
 
 def rate_limited(*args, **kwargs):
     '''
@@ -113,8 +114,11 @@ def retry(*args, **kwargs):
                         success = result
                         
                 except:
-                    import traceback
-                    traceback.print_exc()
+                    logging.exception('%s.%s -%s %s raised an Exception -- Retrying: %s'%(f.__module__,
+                                                                                          f.__name__,
+                                                                                          args,
+                                                                                          fkwargs,
+                                                                                          i + 1 > limit))
                 finally:
                     i += 1
                     
