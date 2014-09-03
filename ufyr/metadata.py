@@ -4,16 +4,13 @@ class MetadataBase(object):
     def __init__(self, **kwargs):
         self.r = StrictRedis(**kwargs)
         
-        #self.key_base = 'ufyr:%s'  ##Should probably be subclassed
+        self.key_base = 'ufyr:%s'  ##Should probably be subclassed
         self._get_meta_key = lambda x: self.key_base%x
         self._error_key = self._get_meta_key('err:%s')
         self._get_error_key = lambda x: self._error_key%x
         self._lockout_key = self._get_meta_key('lk:%s')
         self._get_lockout_key = lambda x: self._lockout_key%x
-    
-    @property
-    def key_base(self):
-        return 'ufyr:%s'
+
 
     def set_metadata(self, key, dict_val):
         self.r.hmset(self._get_meta_key(key), dict_val)
@@ -27,8 +24,6 @@ class MetadataBase(object):
     
     def set_lockout(self, key, expire=7200):
         key = self._get_lockout_key(key)
-        #raise Exception('FUCK OFF!')
-        #import pdb; pdb.set_trace()
         self.r.set(key, 1)
         self.r.expire(key, expire)
 
