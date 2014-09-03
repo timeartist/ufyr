@@ -54,7 +54,8 @@ class Callback(object):
         f = getattr(requests, self.method.lower())
         #f = retry(f) ##We'll just have to do this manually for now.
         queue.enqueue_call(func=f,
-                       kwargs = self.req_kwargs)
+                           args=(self.url,),
+                           kwargs = self.req_kwargs)
     
     @retry
     def execute(self):
