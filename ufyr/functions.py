@@ -5,7 +5,7 @@ from logger import Logger
 from utils.http import Callback
 
 
-def do(func_list, metadata_class, retry_limit=None, log_path=LOG_FILE, callback=None, **kwargs):
+def do(func_list, metadata_class, retry_limit=None, log_path='/var/log/do.log', callback=None, **kwargs):
     '''
     Logging/retry logic wrapper.
     
