@@ -118,7 +118,7 @@ def retry(*args, **kwargs):
                                                                                           f.__name__,
                                                                                           args,
                                                                                           fkwargs,
-                                                                                          i + 1 > limit))
+                                                                                          i + 1 < limit))
                 finally:
                     i += 1
                     
