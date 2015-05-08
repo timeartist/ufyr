@@ -1,10 +1,10 @@
 from redis import StrictRedis
 
 class MetadataBase(object):
-    def __init__(self, **kwargs):
+    def __init__(self, key_base=None, **kwargs):
         self.r = StrictRedis(**kwargs)
         
-        self.key_base = 'ufyr:%s'  ##Should probably be subclassed
+        self.key_base = key_base or 'ufyr:%s'  ##Should probably be subclassed
         self._get_meta_key = lambda x: self.key_base%x
         self._error_key = self._get_meta_key('err:%s')
         self._get_error_key = lambda x: self._error_key%x
