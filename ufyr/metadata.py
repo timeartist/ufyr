@@ -18,6 +18,16 @@ class MetadataBase(object):
     def get_metadata(self, key ):
         return self.r.hgetall(self._get_meta_key(key))
     
+    def get_metadata_multi(self, ids):
+        assert isinstance(ids, (tuple, list, set))
+        
+        pipe = self.r.pipeline()
+        for _id in ids:
+            pipe.hgetall(self._get_meta_key(_id))
+            
+        return pipe.execute()
+        
+    
     def delete_metadata(self, key):
         return self.r.delete(self._get_meta_key(key))
     
