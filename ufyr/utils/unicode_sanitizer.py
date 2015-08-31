@@ -45,8 +45,6 @@ explicit_mapping = {
 mapper = re.compile(u'([\x00-\x7f]+)|([^\x00-\x7f])', re.UNICODE).sub
 #import pdb; pdb.set_trace()
 def ufyl(x):
-    print x
-    #import pdb; pdb.set_trace()
     if x.group(1):
         return x.group(1)
     else:
