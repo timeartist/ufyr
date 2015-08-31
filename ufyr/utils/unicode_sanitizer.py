@@ -43,6 +43,15 @@ explicit_mapping = {
 
 '''The matcher that decides whether text is 0-127 or outside that'''
 mapper = re.compile(u'([\x00-\x7f]+)|([^\x00-\x7f])', re.UNICODE).sub
+#import pdb; pdb.set_trace()
+def ufyl(x):
+    print x
+    #import pdb; pdb.set_trace()
+    if x.group(1):
+        return x.group(1)
+    else:
+        return explicit_mapping.get(ord(x.group(2)), x.group(2))
+
 
 def pretreat(raw_text):
     '''
@@ -58,9 +67,11 @@ def pretreat(raw_text):
     # and is therefore returned unmapped by the lambda function.  Text outside our desired range shows up in the 2nd
     # group, which we're mapping before evaluating in the or statement.  We use setdefault to map it so that characters
     # without a mapping will just map to themselves.
-    return mapper(lambda x: x.group(1) or explicit_mapping.setdefault(ord(x.group(2)), x.group(2)), raw_text)
+    #print 'Original', raw_text
+    #return mapper(lambda x: x.group(1) or explicit_mapping.get(ord(x.group(2)), x.group(2)), raw_text)
+    return mapper(ufyl, raw_text)
 
-def sanitize(raw_text, apply_pre_mapping = True, write_line = None):
+def sanitize(raw_text, apply_pre_mapping = True, write_line = None, encoding_mode='ignore'):
     '''
     Attempt to remove all non-7-bit-printable-ASCII characters
     by mapping to similar equivalents and ignoring all others
@@ -86,7 +97,7 @@ def sanitize(raw_text, apply_pre_mapping = True, write_line = None):
     # Third, take anything that didn't end up as ASCII and get rid of it
     try:
         # To do this, first try to convert to ASCII, ignoring things that don't play nice
-        converted_text = converted_text.encode('ascii', 'ignore')
+        converted_text = converted_text.encode('ascii', encoding_mode)
     except Exception:
         pass # Oh, well, we'll super-squash it next
     
