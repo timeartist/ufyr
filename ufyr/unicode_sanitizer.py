@@ -2,6 +2,7 @@
 # encoding=UTF-8
 '''
 For when you've had enough of this shit and just want text to not blow up
+- Shamelessly stolen from my first mentor James Hayden - 
 '''
 
 import unicodedata
