@@ -13,10 +13,10 @@ def do(func_list, metadata_class, retry_limit=None, log_name='/var/log/do.log', 
     
     Inputs:
         func_list: list of tuples [(func, (args), {kwargs})] - args vs kwargs works on type identification
-        metadata_class - instance of MetadataBase - see metadata.py in same repo
-        retry_limit: int, maximum retries for a given function - not to exceed settings.RETRY_THRESHOLD
+        metadata_class - instance of metadata.MetadataBase
+        retry_limit: int, maximum retries for a given function
         log_name: string name of log file that do should write to
-        callback: string callback json from Callback.to_json to execute upon func_list completion
+        callback: string callback json from http.Callback.to_json to execute upon func_list completion
     '''
     
     logger = Logger('do', log_name).get_logger()
